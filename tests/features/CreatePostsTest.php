@@ -31,4 +31,23 @@ class CreatePostsTest extends FeatureTestCase
 		// Test a user is redirected to the posts details after creating it.
 		$this->see($title);
 	}
+
+	function test_creating_a_post_requires_authentication()
+	{
+		// When
+		$this->visit(route('posts.create'));
+
+		// Then
+		$this->seePageIs(route('login'));
+	}
+
+	function test_creating_post_form_validation()
+	{
+		$this->actingAs($this->defaultUser())
+			->visit(route('posts.create'))
+			->press('Publicar')
+			->seePageIs(route('posts.create'))
+			->seeInElement('#field_title .help-block', 'El campo título es obligatorio')
+			->seeInElement('#field_content .help-block', 'El campo contenido es obligatorio');
+	}
 }
