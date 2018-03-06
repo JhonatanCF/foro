@@ -11,7 +11,7 @@ class ShowPostTest extends TestCase
      *
      * @return void
      */
-    public function test_a_user_can_see_the_post_details()
+    function test_a_user_can_see_the_post_details()
     {
     	// Having
     	$user = $this->defaultUser([
@@ -26,9 +26,28 @@ class ShowPostTest extends TestCase
         $user->posts()->save($post);
 
         //When
-        $this->visit(route('posts.show', $post))
+        $this->visit($post->url)
         	->seeInElement('h1', $post->title)
         	->see($post->content)
         	->see($user->name);
+    }
+
+    function test_old_urls_are_redirected($value='')
+    {
+        // Having
+        $user = $this->defaultUser();
+
+        $post = factory(\App\Post::class)->make([
+            'title' => 'Old title',
+        ]);
+
+        $user->posts()->save($post);
+
+        $url = $post->url;
+        $post->update(['title' => 'New Title']);
+
+        //When
+        $this->visit($url)
+            ->seePageIs($post->url);
     }
 }

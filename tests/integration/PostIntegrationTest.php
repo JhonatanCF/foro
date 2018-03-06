@@ -7,29 +7,42 @@ class PostIntegrationTest extends TestCase
 {
 	use DatabaseTransactions;
 
-    public function test_a_slug_is_generated_and_saved_to_the_database()
+    function test_a_slug_is_generated_and_saved_to_the_database()
     {
-    	$user = $this->defaultUser();
+        $user = $this->defaultUser();
 
-    	$post = factory(\App\Post::class)->make([
-        	'title' => 'Como instalar Laravel',
-        	'content' => 'Este es el contenido del post'
+        $post = factory(\App\Post::class)->make([
+            'title' => 'Como instalar Laravel',
+            'content' => 'Este es el contenido del post'
         ]);
 
-		$user->posts()->save($post);
+        $user->posts()->save($post);
 
-    	$this->assertSame(
-    		'como-instalar-laravel',
-    		$post->fresh()->slug
-		);
+        $this->assertSame(
+            'como-instalar-laravel',
+            $post->fresh()->slug
+        );
 
-		/* --Cumplen la misma funcion que el assert same
+        /* --Cumplen la misma funcion que el assert same
         $this->seeInDatabase('posts', [
-        	'slug' => 'como-instalar-laravel'
-    	]);
+            'slug' => 'como-instalar-laravel'
+        ]);
 
-    	$this->assertSame('como-instalar-laravel', $post->slug);
-    	*/
+        $this->assertSame('como-instalar-laravel', $post->slug);
+        */
 
+    }
+
+    function test_url_post_is_generated_correctly()
+    {
+        // Having
+        $user = $this->defaultUser();
+        $post = factory(\App\Post::class)->make();
+
+        // When
+        $user->posts()->save($post);
+
+        //Then
+        $this->assertSame($post->url, route('posts.show', [$post->id, $post->slug]));
     }
 }
