@@ -139,6 +139,7 @@ return [
         'title'                 => 'título',
         'body'                  => 'contenido',
         'content'               => 'contenido',
+        'comment'               => 'comentario',
         'description'           => 'descripción',
         'excerpt'               => 'extracto',
         'date'                  => 'fecha',
