@@ -11,7 +11,8 @@ class ShowPostTest extends FeatureTestCase
     {
     	// Having
     	$user = $this->defaultUser([
-    		'name' => 'JhonatanCF'
+            'first_name'  => 'Jhonatan',
+    		'last_name'   => 'CF'
 		]);
 
         $post = $this->createPost([
@@ -24,7 +25,7 @@ class ShowPostTest extends FeatureTestCase
         $this->visit($post->url)
             ->seeInElement('h1', $post->title)
             ->see($post->content)
-            ->see($user->name);
+            ->see('Jhonatan CF');
     }
 
     function test_old_urls_are_redirected($value='')

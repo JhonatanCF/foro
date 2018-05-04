@@ -3,7 +3,7 @@
 use App\Token;
 use Illuminate\Support\Facades\Mail;
 
-class AuthenticationTest extends TestCase
+class AuthenticationTest extends FeatureTestCase
 {
     function test_a_guest_user_can_request_a_token()
     {

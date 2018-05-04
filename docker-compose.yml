@@ -1,0 +1,22 @@
+version: '3'
+services:
+    app:
+        build:
+            context: ./docker/app
+            dockerfile: Dockerfile
+        image: foro-docker
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "${APP_PORT}:80"
+        networks:
+            - foronet
+    node:
+        image: node:9.8
+        volumes:
+            - .:/var/www/html
+        networks:
+            - foronet
+networks:
+    foronet:
+        driver: "bridge"

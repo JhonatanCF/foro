@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+# Exportar variables para poder utilizarlas con docker-compose
+export APP_PORT=${APP_PORT:-80}
+
+
+COMPOSE="docker-compose"
+
+# Crear variable para eterminar si docker-compose está en ejecución
+PSRESULT=$(docker-compose ps -q)
+
+# Crear variable para ejecutar contenedores existentes
+if [ ! -z "$PSRESULT" ]; then
+    EXEC="yes"
+else
+    EXEC="no"
+fi
+
+# Verificamos si estamos enviando argumentos
+if [ $# -gt 0 ]; then
+
+    # Justo después de verificar si tenemos argumentos verificamos si existe el archivo .env y si es así
+    # cargamos todas las variables definidas en él
+    if [ -f .env ]; then
+        source .env
+    fi
+
+    # debajo de la sección donde cargamos las variables del archivo .env
+    if [ "$1" == "start" ]; then
+        $COMPOSE up -d
+    elif [ "$1" == "stop" ]; then
+        $COMPOSE down
+
+    # Ejecutar tareas de artisan
+    elif [ "$1" == "art" ]; then
+        shift 1
+        # Si docker-compose está en ejecucion reutilizamos el contenedor
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                app \
+                php artisan "$@"
+        # si docker-compose no está en ejecución creamos un contenedor nuevo
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                app \
+                php artisan "$@"
+        fi
+
+    # Ejecutar tareas de composer
+    elif [ "$1" == "composer" ]; then
+        shift 1
+
+        # Si docker-compose está en ejecucion reutilizamos el contenedor
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                app \
+                composer "$@"
+        # si docker-compose no está en ejecución creamos un contenedor nuevo
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                app \
+                composer "$@"
+        fi
+
+    # Ejecutar pruebas de phpunit
+    elif [ "$1" == "test" ]; then
+        shift 1
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                app \
+                ./vendor/bin/phpunit "$@"
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                app \
+                ./vendor/bin/phpunit "$@"
+        fi
+
+    # Ejecutar tareas de node
+    elif [ "$1" == "npm" ]; then
+        shift 1
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                node \
+                npm "$@"
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                node \
+                npm "$@"
+        fi
+
+    # Ejecutar pruebas de gulp
+    elif [ "$1" == "gulp" ]; then
+        shift 1
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                node \
+                ./node_modules/.bin/gulp "$@"
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                node \
+                ./node_modules/.bin/gulp "$@"
+        fi
+
+    # Ejecutar pruebas de yarn
+    elif [ "$1" == "yarn" ]; then
+        shift 1
+        if [ "$EXEC" == "yes" ]; then
+            $COMPOSE exec \
+                node \
+                yarn "$@"
+        else
+            $COMPOSE run --rm \
+                -w /var/www/html \
+                node \
+                yarn "$@"
+        fi
+
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi
+
+
+# Mis comandos:
+# Si ya existen los contenedores, los iniciamos con
+# $ docker-compose up
+#
+# Si solo queremos detener los contenedores sin eliminarlos, ejecutamos
+# $ docker-compose stop
