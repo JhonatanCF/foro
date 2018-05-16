@@ -47,7 +47,7 @@ class CreatePostsTest extends FeatureTestCase
 		$this->visit(route('posts.create'));
 
 		// Then
-		$this->seePageIs(route('login'));
+		$this->seePageIs(route('token'));
 	}
 
 	function test_creating_post_form_validation()
