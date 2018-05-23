@@ -39,8 +39,10 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function driver()
     {
+        //Se cambio localhost por chrome que es el nombre del contenedor con el driver
+        //Tambien se debe establecer la ip del contenedor web en el archivo: ".env.dusk" ej: APP_URL=http://172.18.0.2
         return RemoteWebDriver::create(
-            'http://localhost:9515', DesiredCapabilities::chrome()
+            'http://chrome:9515', DesiredCapabilities::chrome()
         );
     }
 }

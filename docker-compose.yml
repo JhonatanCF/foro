@@ -17,6 +17,17 @@ services:
             - .:/var/www/html
         networks:
             - foronet
+    chrome:
+        image: robcherry/docker-chromedriver
+        environment:
+            CHROMEDRIVER_WHITELISTED_IPS: ""
+            CHROMEDRIVER_PORT: "9515"
+        ports:
+            - 9515:9515
+        cap_add:
+            - "SYS_ADMIN"
+        networks:
+            - foronet
 networks:
     foronet:
         driver: "bridge"
