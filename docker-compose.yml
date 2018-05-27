@@ -12,6 +12,7 @@ services:
         networks:
             - foronet
     node:
+        #image: wiwatsrt/docker-laravel-nodejs
         image: node:9.8
         volumes:
             - .:/var/www/html
