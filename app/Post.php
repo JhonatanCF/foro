@@ -61,4 +61,14 @@ class Post extends Model
     {
         return Markdown::convertToHtml(e($this->content));
     }
+
+    public function scopePending($query)
+    {
+        $query->where('pending', true);
+    }
+
+    public function scopeCompleted($query)
+    {
+        $query->where('pending', false);
+    }
 }
