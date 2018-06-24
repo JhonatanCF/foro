@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\{Auth, Mail};
 class Token extends Model
 {
 	protected $guarded = [];
-    //
 
     public function user()
     {
@@ -49,5 +48,9 @@ class Token extends Model
         Auth::login($this->user);
 
         $this->delete();
+    }
+
+    public function getUrlAttribute(){
+        return route('login', ['token' => $this->token]);
     }
 }
