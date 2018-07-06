@@ -46,10 +46,15 @@ class Post extends Model
         }
     }
 
+    public function scopeByUser($query, User $user)
+    {
+        $query->where('user_id', $user->id);
+    }
+
     public function setTitleAttribute($value)
     {
-    	$this->attributes['title'] = $value;
-    	$this->attributes['slug'] = Str::slug($value);
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
 
     public function getUrlAttribute()
