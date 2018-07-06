@@ -137,3 +137,6 @@ fi
 #
 # sudo chown jhonatancf:jhonatancf tests/features/AuthenticationTest.php
 # chmod +x tests/features/AuthenticationTest.php
+#
+# php artisan cache:clear
+# php artisan view:clear
