@@ -1,6 +1,10 @@
 <?php
 
 //Routes that require authentication
+Route::post('logout', function () {
+    auth()->logout();
+    return redirect('/');
+});
 
 // Posts
 Route::get('posts/create', [
