@@ -23,11 +23,7 @@ class APostCanBeVotedTest extends TestCase
     {
         $this->post->upvote();
 
-        $this->assertDatabaseHas('votes', [
-            'post_id' => $this->post->id,
-            'user_id' => $this->user->id,
-            'vote' => 1,
-        ]);
+        $this->assertSame(1, $this->post->current_vote);
 
         $this->assertSame(1, $this->post->score);
     }
@@ -45,11 +41,13 @@ class APostCanBeVotedTest extends TestCase
     {
         $this->post->downvote();
 
-        $this->assertDatabaseHas('votes', [
+        $this->assertSame(-1, $this->post->current_vote);
+
+        /*$this->assertDatabaseHas('votes', [
             'post_id' => $this->post->id,
             'user_id' => $this->user->id,
             'vote' => -1,
-        ]);
+        ]);*/
 
         $this->assertSame(-1, $this->post->score);
     }
@@ -108,5 +106,16 @@ class APostCanBeVotedTest extends TestCase
         ]);
 
         $this->assertSame(0, $this->post->score);
+    }
+
+    function test_get_vote_from_user_returns_the_vote_from_the_right_post()
+    {
+        $this->post->upvote();
+
+        $anotherPost = $this->createPost();
+
+        $this->assertSame(1, $this->post->current_vote);
+
+        $this->assertNull($anotherPost->current_vote);
     }
 }
