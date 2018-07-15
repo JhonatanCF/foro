@@ -35,6 +35,9 @@ EXPOSE 80
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Comando para problemas de permisos de ficheros con composer
+# RUN usermod -u 1000 jhonatancf && groupmod -g 1000 jhonatancf
+
 # Justo antes de la directiva CMD vamos a indicar cuál es el directorio de trabajo para los contenedores creados con esta imagen
 WORKDIR /var/www/html
 

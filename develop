@@ -53,12 +53,12 @@ if [ $# -gt 0 ]; then
 
         # Si docker-compose está en ejecucion reutilizamos el contenedor
         if [ "$EXEC" == "yes" ]; then
-            $COMPOSE exec  -u $UID \
+            $COMPOSE exec -u $UID \
                 app \
                 composer "$@"
         # si docker-compose no está en ejecución creamos un contenedor nuevo
         else
-            $COMPOSE run  -u $UID --rm \
+            $COMPOSE run -u $UID --rm \
                 -w /var/www/html \
                 app \
                 composer "$@"
