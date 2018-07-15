@@ -19,7 +19,8 @@ class VoteForPostTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('votes', [
-            'post_id' => $post->id,
+            'votable_id' => $post->id,
+            'votable_type' => \App\Post::class,
             'user_id' => $user->id,
             'vote' => 1,
         ]);
@@ -37,8 +38,10 @@ class VoteForPostTest extends TestCase
             ->assertJson([
                 'new_score' => -1
             ]);
+
         $this->assertDatabaseHas('votes', [
-            'post_id' => $post->id,
+            'votable_id' => $post->id,
+            'votable_type' => \App\Post::class,
             'user_id' => $user->id,
             'vote' => -1,
         ]);
@@ -59,7 +62,8 @@ class VoteForPostTest extends TestCase
             ]);
 
         $this->assertDatabaseMissing('votes', [
-            'post_id' => $post->id,
+            'votable_id' => $post->id,
+            'votable_type' => \App\Post::class,
             'user_id' => $user->id,
         ]);
 
@@ -79,7 +83,8 @@ class VoteForPostTest extends TestCase
             ->assertJson(['error' => 'Unauthenticated.']);
 
         $this->assertDatabaseMissing('votes', [
-            'post_id' => $post->id,
+            'votable_id' => $post->id,
+            'votable_type' => \App\Post::class,
             'user_id' => $user->id,
         ]);
 

@@ -43301,7 +43301,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['score', 'vote', 'post_id'],
+    props: ['score', 'vote', 'id', 'module'],
     data: function data() {
         return {
             currentVote: this.vote ? parseInt(this.vote) : null,
@@ -43340,7 +43340,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         buildUrl: function buildUrl(action) {
-            return '/posts/' + this.post_id + '/' + action;
+            return '/' + this.module + '/' + this.id + '/' + action;
         }
     }
 });
@@ -43371,7 +43371,7 @@ var render = function() {
         [_vm._v("+1")]
       ),
       _vm._v("\n        Puntuación actual: "),
-      _c("strong", { attrs: { id: "current-score" } }, [
+      _c("strong", { staticClass: "current-score" }, [
         _vm._v(_vm._s(_vm.currentScore))
       ]),
       _vm._v(" "),
