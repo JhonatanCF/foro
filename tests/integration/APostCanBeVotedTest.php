@@ -15,8 +15,7 @@ class APostCanBeVotedTest extends TestCase
         parent::setUp();
 
         $this->actingAs($this->user = $this->defaultUser());
-
-        $this->post = $this->createPost();
+        $this->post = $this->createPost(['user_id' => $this->user->id]);
     }
 
     function test_a_post_can_be_upvoted()
@@ -24,7 +23,6 @@ class APostCanBeVotedTest extends TestCase
         $this->post->upvote();
 
         $this->assertSame(1, $this->post->current_vote);
-
         $this->assertSame(1, $this->post->score);
     }
 
@@ -96,12 +94,12 @@ class APostCanBeVotedTest extends TestCase
     function test_a_post_can_be_unvoted()
     {
         $this->assertNull($this->post->current_vote);
-
         $this->post->upvote();
+        $this->post->refresh();
 
         $this->assertSame(1, $this->post->current_vote);
-
-        $this->post->undovote();
+        $this->post->undoVote();
+        $this->post->refresh();
 
         $this->assertNull($this->post->current_vote);
         $this->assertSame(0, $this->post->score);
@@ -110,11 +108,9 @@ class APostCanBeVotedTest extends TestCase
     function test_get_vote_from_user_returns_the_vote_from_the_right_post()
     {
         $this->post->upvote();
-
         $anotherPost = $this->createPost();
 
         $this->assertSame(1, $this->post->current_vote);
-
         $this->assertNull($anotherPost->current_vote);
     }
 }
