@@ -1129,9 +1129,22 @@ window.Vue = __webpack_require__(17);
 window.axios = __webpack_require__(20);
 
 window.axios.defaults.headers.common = {
-  'X-CSRF-TOKEN': window.Laravel.csrfToken,
-  'X-Requested-With': 'XMLHttpRequest'
+    'X-CSRF-TOKEN': window.Laravel.csrfToken,
+    'X-Requested-With': 'XMLHttpRequest'
 };
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Do something with response data
+    return response;
+}, function (error) {
+    // Do something with response error
+    if (error.response.status == 401) {
+        window.location.replace('login');
+    } else {
+        return Promise.reject(error);
+    }
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
