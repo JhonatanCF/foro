@@ -18,28 +18,28 @@ class CreatePostsTest extends DuskTestCase
         $user = $this->defaultUser();
         $category = factory(Category::class)->create();
 
-        $this->browse(function ($browser) use ($user, $category) {
+        $this->browse(function ($browser) use ($user, &$post, $category) {
             // Having
             $browser->loginAs($user)
                 ->visitRoute('posts.create')
                 ->type('title', $this->title)
                 ->type('content', $this->content)
                 ->select('category_id', $category->id)
-                ->press('Publicar')
-                // Test a user is redirected to the posts details after creating it.
-                ->assertPathIs('/posts/1-esta-es-una-pregunta');
+                ->press('Publicar');
+
+            // Test the post was created
+            $this->assertNotNull($post = Post::first());
+
+            // Test a user is redirected to the posts details after creating it.
+            $browser->assertPathIs("/posts/{$post->id}-esta-es-una-pregunta");
         });
 
         // Then
-        $this->assertDatabaseHas('posts', [
-            'title' => $this->title,
-            'content' => $this->content,
-            'pending' => true,
-            'user_id' => $user->id,
-            'slug' => 'esta-es-una-pregunta',
-        ]);
+        $this->assertSame($this->title, $post->title);
+        $this->assertSame($this->content, $post->content);
+        $this->assertTrue($post->pending);
 
-        $post = Post::first();
+        $this->assertSame($user->id, $post->user_id);
 
         // Test the author is suscribed automatically to the post.
         $this->assertDatabaseHas('subscriptions', [
