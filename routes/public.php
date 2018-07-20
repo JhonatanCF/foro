@@ -33,3 +33,8 @@ Route::get('{category?}', [
 	'uses' 	=> 'ListPostController',
 	'as'	=> 'posts.index'
 ]);
+
+Route::get('profile/{user}', [
+    'uses' => 'ProfileController@show',
+    'as' => 'users.show',
+]);
