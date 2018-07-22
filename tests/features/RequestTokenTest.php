@@ -31,6 +31,8 @@ class RequestTokenTest extends FeatureTestCase
 
     function test_a_guest_user_can_request_a_token_without_an_email()
     {
+        $this->handleValidationExceptions();
+
         // Having
         Mail::fake();
 
@@ -52,6 +54,8 @@ class RequestTokenTest extends FeatureTestCase
 
     function test_a_guest_user_can_request_a_token_an_invalid_email()
     {
+        $this->handleValidationExceptions();
+
         // When
         $this->visitRoute('token')
             ->type('Silence', 'email')
@@ -64,6 +68,7 @@ class RequestTokenTest extends FeatureTestCase
 
     function test_a_guest_user_can_request_a_token_with_a_non_existent_email()
     {
+        $this->handleValidationExceptions();
         $this->defaultUser(['email' => 'admin@styde.net']);
 
         // When

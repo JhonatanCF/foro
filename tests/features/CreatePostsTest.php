@@ -45,23 +45,24 @@ class CreatePostsTest extends FeatureTestCase
 	}
 
 	function test_creating_a_post_requires_authentication()
-	{
-		// When
-		$this->visit(route('posts.create'));
+    {
+        $this->handleAuthenticationExceptions();
 
-		// Then
-		$this->seePageIs(route('token'));
-	}
+        $this->visit(route('posts.create'))
+            ->seePageIs(route('token'));
+    }
 
-	function test_creating_post_form_validation()
-	{
-		$this->actingAs($this->defaultUser())
-			->visit(route('posts.create'))
-			->press('Publicar')
-			->seePageIs(route('posts.create'))
-			->seeErrors([
-				'title' 	=> 'El campo título es obligatorio',
-				'content' 	=> 'El campo contenido es obligatorio'
-			]);
-	}
+	function test_create_post_form_validation()
+    {
+        $this->handleValidationExceptions();
+
+        $this->actingAs($this->defaultUser())
+            ->visit(route('posts.create'))
+            ->press('Publicar')
+            ->seePageIs(route('posts.create'))
+            ->seeErrors([
+                'title' => 'El campo título es obligatorio',
+                'content' => 'El campo contenido es obligatorio'
+            ]);
+    }
 }

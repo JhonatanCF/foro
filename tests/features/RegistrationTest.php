@@ -1,4 +1,5 @@
 <?php
+
 use App\{User, Token};
 use App\Mail\TokenMail;
 use Illuminate\Support\Facades\Mail;
@@ -41,5 +42,57 @@ class RegistrationTest extends FeatureTestCase
         $this->seeRouteIs('register_confirmation')
             ->see('Gracias por registrarte')
             ->see('Enviamos a tu email un enlace para que inicies sesión');
+    }
+
+    function test_create_user_form_validation()
+    {
+        $this->handleValidationExceptions();
+
+        $this->visitRoute('register')
+            ->press('Regístrate')
+            ->seePageIs('/register')
+            ->seeErrors([
+                'email' => 'El campo correo electrónico es obligatorio',
+                'username' => 'El campo usuario es obligatorio',
+                'first_name' => 'El campo nombre es obligatorio',
+                'last_name' => 'El campo apellido es obligatorio',
+            ]);
+    }
+
+    function test_create_user_must_register_unique_email()
+    {
+        $this->handleValidationExceptions();
+
+        $this->anyone([
+            'email' => 'admin@styde.net'
+        ]);
+        $this->visitRoute('register')
+            ->type('admin@styde.net', 'email')
+            ->type('johnDoe', 'username')
+            ->type('John', 'first_name')
+            ->type('Doe', 'last_name')
+            ->press('Regístrate')
+            ->seePageIs('/register')
+            ->seeErrors([
+                'email' => 'correo electrónico ya ha sido registrado.',
+            ]);
+    }
+
+    function test_create_user_must_register_unique_username()
+    {
+        $this->handleValidationExceptions();
+        $this->anyone([
+            'username' => 'silence'
+        ]);
+        $this->visitRoute('register')
+            ->type('another@styde.net', 'email')
+            ->type('silence', 'username')
+            ->type('John', 'first_name')
+            ->type('Doe', 'last_name')
+            ->press('Regístrate')
+            ->seePageIs('/register')
+            ->seeErrors([
+                'username' => 'usuario ya ha sido registrado.',
+            ]);
     }
 }

@@ -59,7 +59,10 @@ class VoteForCommentTest extends TestCase
 
     function test_a_guest_user_cannot_vote_for_a_comment()
     {
+        $this->handleAuthenticationExceptions();
+
         auth()->logout();
+
         $this->postJson("comments/{$this->comment->id}/vote/1")
             ->assertStatus(401)
             ->assertJson(['error' => 'Unauthenticated.']);

@@ -22,8 +22,3 @@ Route::get('login/{token}', [
     'uses' => 'LoginController@login',
     'as' => 'login',
 ]);
-
-Route::get('pintame', [
-	'uses' => 'PruebaController@pintame',
-	'as' =>'pintame'
-]);
